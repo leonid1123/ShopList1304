@@ -13,6 +13,11 @@ namespace ShopList1304
     public partial class Form1 : Form
     {
         public float sum = 0;
+        public string[] Names = new string[10];
+        public int[] Prices = new int[10];
+        public int[] Quantities = new int[10];
+        int i = 0;
+
         public Form1()
         {
             InitializeComponent();
@@ -38,9 +43,12 @@ namespace ShopList1304
 
             if (PriceOK && QuantityOK && Name.Length > 0 && !gotDouble)
             {
+                Names[i] = Name;
+                Prices[i] = Price;
+                Quantities[i] = Quantity;
+                i++;
                 listBox1.Items.Add(Name + " " + Price.ToString() + "p." + Quantity.ToString() + "шт.");
-                sum += Price * Quantity;
-                label5.Text = "Итоговая стоимость: " + sum.ToString() + "руб.";
+                SumCount();
             }
             textBox1.Clear();
             textBox2.Clear();
@@ -51,8 +59,23 @@ namespace ShopList1304
         {
             if (listBox1.SelectedIndex != -1)
             {
+                Names[listBox1.SelectedIndex] = "";
+                Prices[listBox1.SelectedIndex] = 0;
+                Quantities[listBox1.SelectedIndex] = 0;
                 listBox1.Items.RemoveAt(listBox1.SelectedIndex);
+                SumCount();
             }
+        }
+        public void SumCount()
+        {
+            sum = 0;
+            for (int i = 0; i < Prices.Length; i++)
+            {
+                sum += Prices[i] * Quantities[i];
+            }
+
+            label5.Text = "Итоговая стоимость: " + sum.ToString() + "руб.";
+
         }
     }
 }
