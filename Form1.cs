@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.IO;
 
 namespace ShopList1304
 {
@@ -39,9 +40,9 @@ namespace ShopList1304
         private void button1_Click(object sender, EventArgs e)//Добавить
         {
             int tmpPrice;
-            bool priceOK = int.TryParse(textBox2.Text, out tmpPrice);
+            bool priceOK = int.TryParse(maskedTextBox1.Text.Trim(), out tmpPrice);
             int tmpQuantity;
-            bool quantityOK = int.TryParse(textBox3.Text, out tmpQuantity);
+            bool quantityOK = int.TryParse(maskedTextBox2.Text.Trim(), out tmpQuantity);
 
             if (textBox1.Text.Length > 0 && priceOK && quantityOK)
             {
@@ -49,8 +50,8 @@ namespace ShopList1304
                 foodList.Add(newFood);
                 ListPrint(foodList);
                 textBox1.Clear();
-                textBox2.Clear();
-                textBox3.Clear();
+                maskedTextBox1.Clear();
+                maskedTextBox2.Clear();
                 SumCount(foodList);
             }
         }
@@ -76,24 +77,24 @@ namespace ShopList1304
         void SumCount(List<Food> foodToSum)
         {
             int sum = 0;
-            foreach (Food food in foodToSum) 
-            { 
-                sum+=food.Price*food.Quantity;
+            foreach (Food food in foodToSum)
+            {
+                sum += food.Price * food.Quantity;
             }
-            label5.Text = "Итоговая стоимость: "+sum.ToString();
-            
+            label5.Text = "Итоговая стоимость: " + sum.ToString();
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             textBox1.Text = foodList[listBox1.SelectedIndex].Name;
-            textBox2.Text = foodList[listBox1.SelectedIndex].Price.ToString();
-            textBox3.Text = foodList[listBox1.SelectedIndex].Quantity.ToString();
+            maskedTextBox1.Text = foodList[listBox1.SelectedIndex].Price.ToString();
+            maskedTextBox2.Text = foodList[listBox1.SelectedIndex].Quantity.ToString();
         }
 
         private void button3_Click(object sender, EventArgs e)//изменить позицию
@@ -101,9 +102,40 @@ namespace ShopList1304
             if (listBox1.SelectedIndex > -1)
             {
                 foodList[listBox1.SelectedIndex].Name = textBox1.Text;
-                foodList[listBox1.SelectedIndex].Price = textBox2.Text;
-                foodList[listBox1.SelectedIndex].Quantity = textBox3.Text;
+                foodList[listBox1.SelectedIndex].Price = int.Parse(maskedTextBox1.Text);
+                foodList[listBox1.SelectedIndex].Quantity = int.Parse(maskedTextBox2.Text);
+                ListPrint(foodList);
+                SumCount(foodList);
             }
+        }
+
+        private void maskedTextBox1_MouseClick(object sender, MouseEventArgs e)
+        {
+            maskedTextBox1.SelectAll();
+        }
+
+        private void maskedTextBox2_MouseClick(object sender, MouseEventArgs e)
+        {
+            maskedTextBox2.SelectAll();
+        }
+
+        private void оПрограммеToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form2 frm2 = new Form2();
+            frm2.ShowDialog();
+        }
+
+        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            foreach(Food food in foodList)
+            {
+                String tmp = food.Name+food.Price.ToString()+food.Quantity.ToString();
+                File.WriteAllText("WriteLines.txt",tmp);
+
+            }
+
+
+
         }
     }
 }
