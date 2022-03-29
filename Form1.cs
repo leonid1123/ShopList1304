@@ -19,24 +19,16 @@ namespace ShopList1304
                 this.price = price;
                 this.quantity = quantity;
             }
-
             public string Name { get => name; set => name = value; }
             public int Price { get => price; set => price = value; }
             public int Quantity { get => quantity; set => quantity = value; }
-
-
         }
-
         List<Food> foodList = new List<Food>();
-
         Food bread = new Food("хлеб", 12, 10);
-
-
         public Form1()
         {
             InitializeComponent();
         }
-
         private void button1_Click(object sender, EventArgs e)//Добавить
         {
             int tmpPrice;
@@ -64,7 +56,6 @@ namespace ShopList1304
             }
             return listToPrint.Count;
         }
-
         private void button2_Click(object sender, EventArgs e)//Удалить
         {
             if (listBox1.SelectedIndex > -1)
@@ -82,21 +73,17 @@ namespace ShopList1304
                 sum += food.Price * food.Quantity;
             }
             label5.Text = "Итоговая стоимость: " + sum.ToString();
-
         }
-
         private void Form1_Load(object sender, EventArgs e)
         {
 
         }
-
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             textBox1.Text = foodList[listBox1.SelectedIndex].Name;
             maskedTextBox1.Text = foodList[listBox1.SelectedIndex].Price.ToString();
             maskedTextBox2.Text = foodList[listBox1.SelectedIndex].Quantity.ToString();
         }
-
         private void button3_Click(object sender, EventArgs e)//изменить позицию
         {
             if (listBox1.SelectedIndex > -1)
@@ -108,34 +95,40 @@ namespace ShopList1304
                 SumCount(foodList);
             }
         }
-
         private void maskedTextBox1_MouseClick(object sender, MouseEventArgs e)
         {
             maskedTextBox1.SelectAll();
         }
-
         private void maskedTextBox2_MouseClick(object sender, MouseEventArgs e)
         {
             maskedTextBox2.SelectAll();
         }
-
         private void оПрограммеToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Form2 frm2 = new Form2();
             frm2.ShowDialog();
         }
-
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            foreach(Food food in foodList)
+            String tmp = "";
+            foreach (Food food in foodList)
             {
-                String tmp = food.Name+food.Price.ToString()+food.Quantity.ToString();
-                File.WriteAllText("WriteLines.txt",tmp);
-
+                tmp += food.Name + ";" + food.Price.ToString() + ";" + food.Quantity.ToString() + "\n";
             }
-
-
-
+            File.WriteAllText("WriteLines.txt", tmp);
+        }
+        private void toolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            string[] readText = File.ReadAllLines("WriteLines.txt");
+            foodList.Clear();
+            for (int i = 0; i < readText.Length; i++)
+            {
+                string[] tmp = readText[i].Split(';');
+                Food readFood = new Food(tmp[0], int.Parse(tmp[1]), int.Parse(tmp[2]));
+                foodList.Add(readFood);
+                ListPrint(foodList);
+                SumCount(foodList);
+            }
         }
     }
 }
